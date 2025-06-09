@@ -2,6 +2,7 @@
 
 namespace Laravel\Fortify;
 
+use Laravel\Fortify\Contracts\ConfirmPasswordViewResponse;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Contracts\RegisterViewResponse;
@@ -24,11 +25,18 @@ class Fortify
     public static $authenticateThroughCallback;
 
     /**
-     * The callback that is repsonsible for validating authentication credentials, if applicable.
+     * The callback that is responsible for validating authentication credentials, if applicable.
      *
      * @var callable|null
      */
     public static $authenticateUsingCallback;
+
+    /**
+     * The callback that is responsible for confirming user passwords.
+     *
+     * @var callable|null
+     */
+    public static $confirmPasswordsUsingCallback;
 
     /**
      * Indicates if Fortify routes will be registered.
@@ -138,6 +146,19 @@ class Fortify
     }
 
     /**
+     * Specify which view should be used as the password confirmation prompt.
+     *
+     * @param  callable|string  $view
+     * @return void
+     */
+    public static function confirmPasswordView($view)
+    {
+        app()->singleton(ConfirmPasswordViewResponse::class, function () use ($view) {
+            return new SimpleViewResponse($view);
+        });
+    }
+
+    /**
      * Specify which view should be used as the request password reset link view.
      *
      * @param  callable|string  $view
@@ -181,6 +202,17 @@ class Fortify
     public static function authenticateUsing(callable $callback)
     {
         static::$authenticateUsingCallback = $callback;
+    }
+
+    /**
+     * Register a callback that is responsible for confirming existing user passwords as valid.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public static function confirmPasswordsUsing(callable $callback)
+    {
+        static::$confirmPasswordsUsingCallback = $callback;
     }
 
     /**
