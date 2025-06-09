@@ -33,9 +33,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (! $this->app->configurationIsCached()) {
-            $this->mergeConfigFrom(__DIR__.'/../config/fortify.php', 'fortify');
-        }
+        $this->mergeConfigFrom(__DIR__.'/../config/fortify.php', 'fortify');
 
         $this->registerResponseBindings();
 
@@ -111,11 +109,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     protected function configureRoutes()
     {
-        Route::group([
-            'namespace' => 'Laravel\Fortify\Http\Controllers',
-            'domain' => config('fortify.domain', null),
-        ], function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
-        });
+        if (Fortify::$registersRoutes) {
+            Route::group([
+                'namespace' => 'Laravel\Fortify\Http\Controllers',
+                'domain' => config('fortify.domain', null),
+                'prefix' => config('fortify.path'),
+            ], function () {
+                $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+            });
+        }
     }
 }
