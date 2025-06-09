@@ -2,6 +2,7 @@
 
 namespace Laravel\Fortify\Http\Responses;
 
+use Laravel\Fortify\Contracts\ConfirmPasswordViewResponse;
 use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Contracts\RegisterViewResponse;
 use Laravel\Fortify\Contracts\RequestPasswordResetLinkViewResponse;
@@ -15,7 +16,8 @@ class SimpleViewResponse implements
     RegisterViewResponse,
     RequestPasswordResetLinkViewResponse,
     TwoFactorChallengeViewResponse,
-    VerifyEmailViewResponse
+    VerifyEmailViewResponse,
+    ConfirmPasswordViewResponse
 {
     /**
      * The name of the view or the callable used to generate the view.
